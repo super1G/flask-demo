@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from api.user.user import UserView
 from flasgger import Swagger
+
 # <editor-fold desc="修改env">
 ENV = 'test'
 if ENV == 'production':
@@ -18,7 +19,9 @@ print(os.environ['name'])
 app = Flask(__name__, instance_path="/{project_folder_abs_path}/instance")
 # app = Flask(__name__)
 user = UserView(os.environ['mongo'])
-app.register_blueprint(user.app)
+api_handlers = [user]
+for handler in api_handlers:
+    app.register_blueprint(handler.app)
 Swagger(app)
 
 
